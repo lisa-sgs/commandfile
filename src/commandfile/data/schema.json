@@ -4,6 +4,9 @@
     "description": "A file format used to define the configuration of scientific processing tasks.",
     "type": "object",
     "properties": {
+        "header": {
+            "type": "object"
+        },
         "parameters": {
             "type": "array",
             "items": {
@@ -24,6 +27,7 @@
         }
     },
     "required": [
+        "header",
         "parameters",
         "inputs",
         "outputs"
