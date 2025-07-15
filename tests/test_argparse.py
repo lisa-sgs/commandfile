@@ -1,16 +1,15 @@
 from pathlib import Path
 
-import yaml
+import pytest
 
 from commandfile.argparse import CommandfileArgumentParser
+from commandfile.io import write_cmdfile_yaml
 from commandfile.model import Commandfile, Filelist, Parameter
 
 
-def write_cmdfile(cmdfile: Commandfile, tmp_path: Path) -> str:
-    path = tmp_path / "commandfile.yaml"
-    with open(path, "w") as f:
-        yaml.dump(cmdfile.model_dump(), f, default_flow_style=False)
-    return str(path)
+@pytest.fixture
+def commandfile_path(tmp_path: Path):
+    return tmp_path / "commandfile.yaml"
 
 
 def test_standard_arguments():
@@ -20,35 +19,37 @@ def test_standard_arguments():
     assert args.some_arg == 42
 
 
-def test_commandfile_parameter(tmp_path: Path):
+def test_commandfile_parameter(commandfile_path: Path):
     cmdfile = Commandfile(
         header={},
         parameters=[Parameter(key="some-arg", value="42")],
         inputs=[],
         outputs=[],
     )
+    write_cmdfile_yaml(cmdfile, commandfile_path)
     parser = CommandfileArgumentParser()
     parser.add_argument("--some-arg", type=int)
-    args = parser.parse_args(["--commandfile", write_cmdfile(cmdfile, tmp_path)])
+    args = parser.parse_args(["--commandfile", str(commandfile_path)])
     assert args.some_arg == 42
 
 
-def test_commandfile_parameter_override(tmp_path: Path):
+def test_commandfile_parameter_override(commandfile_path: Path):
     cmdfile = Commandfile(
         header={},
         parameters=[Parameter(key="some-arg", value="42")],
         inputs=[],
         outputs=[],
     )
+    write_cmdfile_yaml(cmdfile, commandfile_path)
     parser = CommandfileArgumentParser()
     parser.add_argument("--some-arg", type=int)
     args = parser.parse_args(
-        ["--commandfile", write_cmdfile(cmdfile, tmp_path), "--some-arg", "100"]
+        ["--commandfile", str(commandfile_path), "--some-arg", "100"]
     )
     assert args.some_arg == 100
 
 
-def test_commandfile_filelist(tmp_path: Path):
+def test_commandfile_filelist(commandfile_path: Path):
     cmdfile = Commandfile(
         header={},
         parameters=[],
@@ -60,13 +61,14 @@ def test_commandfile_filelist(tmp_path: Path):
         ],
         outputs=[],
     )
+    write_cmdfile_yaml(cmdfile, commandfile_path)
     parser = CommandfileArgumentParser()
     parser.add_argument("--some-file-input", type=str, nargs="+")
-    args = parser.parse_args(["--commandfile", write_cmdfile(cmdfile, tmp_path)])
+    args = parser.parse_args(["--commandfile", str(commandfile_path)])
     assert args.some_file_input == ["file1.txt", "file2.txt"]
 
 
-def test_commandfile_empty_filelist(tmp_path: Path):
+def test_commandfile_empty_filelist(commandfile_path: Path):
     cmdfile = Commandfile(
         header={},
         parameters=[],
@@ -78,7 +80,8 @@ def test_commandfile_empty_filelist(tmp_path: Path):
         ],
         outputs=[],
     )
+    write_cmdfile_yaml(cmdfile, commandfile_path)
     parser = CommandfileArgumentParser()
     parser.add_argument("--some-file-input", type=str, nargs="*")
-    args = parser.parse_args(["--commandfile", write_cmdfile(cmdfile, tmp_path)])
+    args = parser.parse_args(["--commandfile", str(commandfile_path)])
     assert args.some_file_input == []
