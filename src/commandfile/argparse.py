@@ -12,7 +12,16 @@ logger = logging.getLogger(__name__)
 
 class CommandfileArgumentParser(ArgumentParser):
     def parse_args(self, args=None, namespace=None) -> Namespace:
-        # If no args are provided, use sys.argv
+        remaining_argv = self._parse_commandfile_arg(args)
+        return super().parse_args(remaining_argv, namespace)
+
+    def parse_known_args(
+        self, args=None, namespace=None
+    ) -> tuple[Namespace, list[str]]:
+        remaining_argv = self._parse_commandfile_arg(args)
+        return super().parse_known_args(remaining_argv, namespace)
+
+    def _parse_commandfile_arg(self, args=None):
         if args is None:
             args = sys.argv[1:]
 
@@ -28,8 +37,7 @@ class CommandfileArgumentParser(ArgumentParser):
             # Prepend commandfile args to the remaining command-line args.
             # This ensures that command-line args can override file-based args.
             remaining_argv = [*self._commandfile_to_argv(commandfile), *remaining_argv]
-
-        return super().parse_args(remaining_argv, namespace)
+        return remaining_argv
 
     def _load_commandfile(self, path: str):
         """Load a Commandfile from a YAML file."""

@@ -104,3 +104,23 @@ def test_commandfile_single_input(commandfile_path: Path):
     parser.add_argument("--single-input", type=Path)
     args = parser.parse_args(["--commandfile", str(commandfile_path)])
     assert args.single_input == Path("single.txt")
+
+
+def test_commandfile_known_args(commandfile_path: Path):
+    cmdfile = Commandfile(
+        header={},
+        parameters=[
+            Parameter(key="known-arg", value="value"),
+            Parameter(key="unknown-arg", value="ignored"),
+        ],
+        inputs=[],
+        outputs=[],
+    )
+    write_cmdfile_yaml(cmdfile, commandfile_path)
+    parser = CommandfileArgumentParser()
+    parser.add_argument("--known-arg", type=str)
+    args, remaining_argv = parser.parse_known_args(
+        ["--commandfile", str(commandfile_path)]
+    )
+    assert args.known_arg == "value"
+    assert remaining_argv == ["--unknown-arg", "ignored"]
