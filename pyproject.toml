@@ -1,5 +1,5 @@
 [project]
-name = "commandfile"
+name = "commandfile-tmp"
 dynamic = ["version"]
 description = "Command file for scientific workflows."
 license = "Apache-2.0"
