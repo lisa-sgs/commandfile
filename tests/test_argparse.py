@@ -85,3 +85,22 @@ def test_commandfile_empty_filelist(commandfile_path: Path):
     parser.add_argument("--some-file-input", type=str, nargs="*")
     args = parser.parse_args(["--commandfile", str(commandfile_path)])
     assert args.some_file_input == []
+
+
+def test_commandfile_single_input(commandfile_path: Path):
+    cmdfile = Commandfile(
+        header={},
+        parameters=[],
+        inputs=[
+            Filelist(
+                key="single-input",
+                files=["single.txt"],
+            ),
+        ],
+        outputs=[],
+    )
+    write_cmdfile_yaml(cmdfile, commandfile_path)
+    parser = CommandfileArgumentParser()
+    parser.add_argument("--single-input", type=Path)
+    args = parser.parse_args(["--commandfile", str(commandfile_path)])
+    assert args.single_input == Path("single.txt")
