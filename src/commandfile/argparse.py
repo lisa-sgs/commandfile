@@ -11,6 +11,11 @@ logger = logging.getLogger(__name__)
 
 
 class CommandfileArgumentParser(ArgumentParser):
+    def __init__(self, *, implicit_arg: str = "--commandfile", **kwargs):
+        super().__init__(**kwargs)
+        self.implicit_arg = implicit_arg
+        self.implicit_dest = implicit_arg.lstrip(self.prefix_chars).replace("-", "_")
+
     def parse_args(self, args=None, namespace=None) -> Namespace:
         remaining_argv = self._parse_commandfile_arg(args)
         return super().parse_args(remaining_argv, namespace)
@@ -25,15 +30,16 @@ class CommandfileArgumentParser(ArgumentParser):
         if args is None:
             args = sys.argv[1:]
 
-        # Create a minimal parser to find the --commandfile argument without
+        # Create a minimal parser to find the implicit argument without
         # raising errors for other unknown arguments.
         pre_parser = ArgumentParser(add_help=False)
-        pre_parser.add_argument("--commandfile", type=str)
+        pre_parser.add_argument(self.implicit_arg, type=str)
         pre_args, remaining_argv = pre_parser.parse_known_args(args)
 
-        if pre_args.commandfile:
-            commandfile = self._load_commandfile(pre_args.commandfile)
-            logger.debug("Loaded commandfile %s: %s", pre_args.commandfile, commandfile)
+        commandfile_path = getattr(pre_args, self.implicit_dest)
+        if commandfile_path:
+            commandfile = self._load_commandfile(commandfile_path)
+            logger.debug("Loaded commandfile %s: %s", commandfile_path, commandfile)
             # Prepend commandfile args to the remaining command-line args.
             # This ensures that command-line args can override file-based args.
             remaining_argv = [*self._commandfile_to_argv(commandfile), *remaining_argv]

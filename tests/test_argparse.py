@@ -45,6 +45,20 @@ def test_commandfile_parameter(commandfile_path: Path):
     assert args.some_arg == 42
 
 
+def test_commandfile_implicit_argument_rename(commandfile_path: Path):
+    cmdfile = Commandfile(
+        header={},
+        parameters=[Parameter(key="some-arg", value="42")],
+        inputs=[],
+        outputs=[],
+    )
+    write_cmdfile_yaml(cmdfile, commandfile_path)
+    parser = CommandfileArgumentParser(implicit_arg="--read-that")
+    parser.add_argument("--some-arg", type=int)
+    args = parser.parse_args(["--read-that", str(commandfile_path)])
+    assert args.some_arg == 42
+
+
 def test_commandfile_parameter_override(commandfile_path: Path):
     cmdfile = Commandfile(
         header={},
