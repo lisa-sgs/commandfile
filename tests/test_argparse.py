@@ -1,4 +1,6 @@
+import sys
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -10,6 +12,16 @@ from commandfile.model import Commandfile, Filelist, Parameter
 @pytest.fixture
 def commandfile_path(tmp_path: Path):
     return tmp_path / "commandfile.yaml"
+
+
+def test_no_args():
+    parser = CommandfileArgumentParser()
+    parser.add_argument("value", type=int)
+    parser.add_argument("--some-flag", action="store_true")
+    with patch.object(sys, "argv", ["example.py", "42", "--some-flag"]):
+        args = parser.parse_args()
+        assert args.value == 42
+        assert args.some_flag is True
 
 
 def test_standard_arguments():
