@@ -1,1 +1,25 @@
-# commandfile
+# Commandfile
+
+[![PyPI version](https://img.shields.io/pypi/v/commandfile-tmp.svg)](https://pypi.org/project/commandfile-tmp/)
+[![Build status](https://img.shields.io/github/actions/workflow/status/lisa-sgs/commandfile/ci.yml?branch=develop)](https://github.com/lisa-sgs/commandfile/actions)
+[![Coverage status](https://img.shields.io/coverallsCoverage/github/lisa-sgs/commandfile)](https://coveralls.io/github/lisa-sgs/commandfile?branch=develop)
+[![License](https://img.shields.io/pypi/l/commandfile-tmp)](https://opensource.org/license/apache-2-0)
+
+## Purpose and scope
+
+Commandfile defines a file format to pass arguments and runtime metadata to executables.
+Its intended use case is to simplify and harmonize the calling convention of scientific modules in the [LISA](https://www.lisamission.org/) Scientific Ground Segment.
+
+## Usage
+
+This project provides a drop-in replacement for the `ArgumentParser` provided by [`argparse`](https://docs.python.org/3/library/argparse).
+
+```python
+from commandfile.argparse import CommandfileArgumentParser as ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument("some-argument", type=int)
+```
+
+When using this parser, your program can either be executed by passing arguments on the command-line, or by providing a single `--commandfile` argument compliant with the [file format specification](src/commandfile/data/schema.json).
+When developing locally, both approaches can be combined, the command-line arguments overriding the arguments specified in the commandfile.
