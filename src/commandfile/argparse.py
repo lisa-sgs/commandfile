@@ -50,10 +50,10 @@ class CommandfileArgumentParser(ArgumentParser):
         """Convert a Commandfile to a list of command-line arguments."""
         argv = []
         for item in commandfile.parameters:
-            argv.extend([f"--{item.key}", item.value])
+            argv.extend([f"--{item.key}", str(item.value)])
 
         for filelist in chain(commandfile.inputs, commandfile.outputs):
             argv.append(f"--{filelist.key}")
-            argv.extend(filelist.files)
+            argv.extend(map(str, filelist.files))
 
         return argv
