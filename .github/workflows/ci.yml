@@ -9,10 +9,7 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.9"
-          - "3.10"
           - "3.11"
-          - "3.12"
 
     steps:
       - uses: actions/checkout@v4
@@ -21,3 +18,17 @@ jobs:
         uses: astral-sh/setup-uv@v6
         with:
           python-version: ${{ matrix.python-version }}
+          enable-cache: true
+
+      - name: Install project
+        run: uv sync --locked --all-extras --dev
+
+      - name: Run tests
+        run: uv run pytest
+
+      - name: Build package
+        run: uv build
+
+      - name: Upload package
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        run: uv publish
