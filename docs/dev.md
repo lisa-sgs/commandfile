@@ -3,7 +3,7 @@
 ## Run tests
 
 ```console
-uv run pytest
+uv run pytest --cov
 ```
 
 ## Generate Python bindings
