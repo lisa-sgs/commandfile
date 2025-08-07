@@ -1,9 +1,9 @@
 # Commandfile
 
-[![PyPI version](https://img.shields.io/pypi/v/commandfile-tmp.svg)](https://pypi.org/project/commandfile-tmp/)
+[![PyPI version](https://img.shields.io/pypi/v/commandfile.svg)](https://pypi.org/project/commandfile/)
 [![Build status](https://img.shields.io/github/actions/workflow/status/lisa-sgs/commandfile/ci.yml?branch=develop)](https://github.com/lisa-sgs/commandfile/actions)
 [![Coverage Status](https://coveralls.io/repos/github/lisa-sgs/commandfile/badge.svg?branch=develop)](https://coveralls.io/github/lisa-sgs/commandfile?branch=develop)
-[![License](https://img.shields.io/pypi/l/commandfile-tmp)](https://opensource.org/license/apache-2-0)
+[![License](https://img.shields.io/pypi/l/commandfile)](https://opensource.org/license/apache-2-0)
 
 ## Purpose and scope
 
