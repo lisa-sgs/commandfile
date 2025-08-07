@@ -30,6 +30,7 @@ jobs:
           file: coverage.xml
 
   pypi-publish:
+    environment: release
     name: Publish package to PyPI
     needs: test
     runs-on: ubuntu-latest
