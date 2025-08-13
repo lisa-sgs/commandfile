@@ -52,6 +52,19 @@ def test_commandfile_implicit_argument_rename(commandfile_path: Path):
     assert args.some_arg == 42
 
 
+def test_commandfile_implicit_argument(commandfile_path: Path):
+    cmdfile = Commandfile(
+        header={},
+        parameters=[],
+        inputs=[],
+        outputs=[],
+    )
+    write_cmdfile_yaml(cmdfile, commandfile_path)
+    parser = CommandfileArgumentParser()
+    args = parser.parse_args(["--commandfile", str(commandfile_path)])
+    assert args.commandfile == commandfile_path
+
+
 def test_commandfile_parameter_override(commandfile_path: Path):
     cmdfile = Commandfile(
         header={},

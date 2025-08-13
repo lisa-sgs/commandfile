@@ -15,6 +15,9 @@ class CommandfileArgumentParser(ArgumentParser):
         super().__init__(**kwargs)
         self.implicit_arg = implicit_arg
         self.implicit_dest = implicit_arg.lstrip(self.prefix_chars).replace("-", "_")
+        # Add implicit argument to the parser so that the commandfile can be accessed
+        # by client code.
+        self.add_argument(self.implicit_arg, type=Path, help="Path to a commandfile.")
 
     def parse_args(self, args=None, namespace=None) -> Namespace:
         remaining_argv = self._parse_commandfile_arg(args)
@@ -30,8 +33,9 @@ class CommandfileArgumentParser(ArgumentParser):
         if args is None:
             args = sys.argv[1:]
 
-        # Create a minimal parser to find the implicit argument without
-        # raising errors for other unknown arguments.
+        # Create a minimal parser to find the implicit argument without raising errors
+        # for other unknown arguments, and without consuming the implicit argument in
+        # the original parser.
         pre_parser = ArgumentParser(add_help=False)
         pre_parser.add_argument(self.implicit_arg, type=Path)
         pre_args, remaining_argv = pre_parser.parse_known_args(args)
@@ -40,9 +44,14 @@ class CommandfileArgumentParser(ArgumentParser):
         if commandfile_path:
             commandfile = self._load_commandfile(commandfile_path)
             logger.debug("Loaded commandfile %s: %s", commandfile_path, commandfile)
-            # Prepend commandfile args to the remaining command-line args.
-            # This ensures that command-line args can override file-based args.
-            remaining_argv = [*self._commandfile_to_argv(commandfile), *remaining_argv]
+            remaining_argv = [
+                # Prepend commandfile args to the remaining command-line args.
+                # This ensures that command-line args can override file-based args.
+                *self._commandfile_to_argv(commandfile),
+                *remaining_argv,
+                # Append the implicit argument to the end of the list.
+                *(self.implicit_arg, str(commandfile_path)),
+            ]
         return remaining_argv
 
     def _load_commandfile(self, path: Path) -> Commandfile:
