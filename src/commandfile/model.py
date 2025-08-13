@@ -17,5 +17,16 @@ class Commandfile(BaseCommandfile):
                 return param
         raise KeyError(f"Parameter {key!r} not found")
 
-    def find_filelist(self, key: str) -> Filelist:
-        raise NotImplementedError()
+    def find_input(self, key: str) -> Filelist:
+        """Find an input filelist by its key."""
+        for file_inputs in self.inputs:
+            if file_inputs.key == key:
+                return file_inputs
+        raise KeyError(f"Input filelist {key!r} not found")
+
+    def find_output(self, key: str) -> Filelist:
+        """Find an output filelist by its key."""
+        for file_outputs in self.outputs:
+            if file_outputs.key == key:
+                return file_outputs
+        raise KeyError(f"Output filelist {key!r} not found")
