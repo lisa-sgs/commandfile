@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-08-13
+
 ### Added
 
 - Added `read_cmdfile_yaml` to `io` module.
@@ -21,5 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added initial version.
 
-[unreleased]: https://github.com/lisa-sgs/commandfile/compare/0.1.3...HEAD
+[unreleased]: https://github.com/lisa-sgs/commandfile/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/lisa-sgs/commandfile/releases/tag/0.2.0
 [0.1.3]: https://github.com/lisa-sgs/commandfile/releases/tag/0.1.3
