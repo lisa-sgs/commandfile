@@ -2,16 +2,9 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-
 from commandfile.argparse import CommandfileArgumentParser
 from commandfile.io import write_cmdfile_yaml
 from commandfile.model import Commandfile, Filelist, Parameter
-
-
-@pytest.fixture
-def commandfile_path(tmp_path: Path):
-    return tmp_path / "commandfile.yaml"
 
 
 def test_no_args():

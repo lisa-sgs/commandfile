@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `read_cmdfile_yaml` to `io` module.
+
 ## [0.1.3] - 2025-08-07
 
 ### Added
