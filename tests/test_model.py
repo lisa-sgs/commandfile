@@ -41,6 +41,17 @@ def test_find_input():
     assert input_filelist.files == ["file-3-0.txt", "file-3-1.txt", "file-3-2.txt"]
 
 
+def test_find_input_not_found():
+    cmdfile = Commandfile(
+        header={},
+        parameters=[],
+        inputs=[],
+        outputs=[],
+    )
+    with pytest.raises(KeyError, match="Input filelist 'anything' not found"):
+        cmdfile.find_input("anything")
+
+
 def test_find_output():
     cmdfile = Commandfile(
         header={},
@@ -54,3 +65,14 @@ def test_find_output():
     output_filelist = cmdfile.find_output("output-1")
     assert output_filelist.key == "output-1"
     assert output_filelist.files == ["file-1-0.txt", "file-1-1.txt", "file-1-2.txt"]
+
+
+def test_find_output_not_found():
+    cmdfile = Commandfile(
+        header={},
+        parameters=[],
+        inputs=[],
+        outputs=[],
+    )
+    with pytest.raises(KeyError, match="Output filelist 'anything' not found"):
+        cmdfile.find_output("anything")
