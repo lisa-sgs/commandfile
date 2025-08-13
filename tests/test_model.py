@@ -1,6 +1,6 @@
 import pytest
 
-from commandfile.model import Commandfile, Parameter
+from commandfile.model import Commandfile, Filelist, Parameter
 
 
 def test_find_parameter():
@@ -25,3 +25,33 @@ def test_find_parameter_not_found():
     with pytest.raises(KeyError) as exc_info:
         cmdfile.find_parameter("param-20")
         assert str(exc_info.value) == "Parameter 'param-20' not found"
+
+
+def test_find_input():
+    cmdfile = Commandfile(
+        header={},
+        parameters=[],
+        inputs=[
+            Filelist(key=f"input-{i}", files=[f"file-{i}-{j}.txt" for j in range(3)])
+            for i in range(5)
+        ],
+        outputs=[],
+    )
+    input_filelist = cmdfile.find_input("input-3")
+    assert input_filelist.key == "input-3"
+    assert input_filelist.files == ["file-3-0.txt", "file-3-1.txt", "file-3-2.txt"]
+
+
+def test_find_output():
+    cmdfile = Commandfile(
+        header={},
+        parameters=[],
+        inputs=[],
+        outputs=[
+            Filelist(key=f"output-{i}", files=[f"file-{i}-{j}.txt" for j in range(3)])
+            for i in range(5)
+        ],
+    )
+    output_filelist = cmdfile.find_output("output-1")
+    assert output_filelist.key == "output-1"
+    assert output_filelist.files == ["file-1-0.txt", "file-1-1.txt", "file-1-2.txt"]
