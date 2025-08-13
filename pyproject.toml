@@ -10,6 +10,13 @@ dependencies = [
     "pyyaml",
 ]
 
+[project.urls]
+Homepage = "https://github.com/lisa-sgs/commandfile"
+Source = "https://github.com/lisa-sgs/commandfile"
+Issues = "https://github.com/lisa-sgs/commandfile/issues"
+Changelog = "https://github.com/lisa-sgs/commandfile/blob/develop/CHANGELOG.md"
+
+
 [dependency-groups]
 dev = [
     "datamodel-code-generator",
