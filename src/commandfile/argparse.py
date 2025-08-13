@@ -2,9 +2,9 @@ import logging
 import sys
 from argparse import ArgumentParser, Namespace
 from itertools import chain
+from pathlib import Path
 
-import yaml
-
+from commandfile.io import read_cmdfile_yaml
 from commandfile.model import Commandfile
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ class CommandfileArgumentParser(ArgumentParser):
         # Create a minimal parser to find the implicit argument without
         # raising errors for other unknown arguments.
         pre_parser = ArgumentParser(add_help=False)
-        pre_parser.add_argument(self.implicit_arg, type=str)
+        pre_parser.add_argument(self.implicit_arg, type=Path)
         pre_args, remaining_argv = pre_parser.parse_known_args(args)
 
         commandfile_path = getattr(pre_args, self.implicit_dest)
@@ -45,12 +45,9 @@ class CommandfileArgumentParser(ArgumentParser):
             remaining_argv = [*self._commandfile_to_argv(commandfile), *remaining_argv]
         return remaining_argv
 
-    def _load_commandfile(self, path: str):
+    def _load_commandfile(self, path: Path) -> Commandfile:
         """Load a Commandfile from a YAML file."""
-        with open(path) as f:
-            raw = yaml.safe_load(f)
-
-        return Commandfile(**raw)
+        return read_cmdfile_yaml(path)
 
     def _commandfile_to_argv(self, commandfile: Commandfile) -> list[str]:
         """Convert a Commandfile to a list of command-line arguments."""
