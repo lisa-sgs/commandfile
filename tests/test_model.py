@@ -1,11 +1,9 @@
-from pathlib import Path
-
 import pytest
 
 from commandfile.model import Commandfile, Parameter
 
 
-def test_find_parameter(commandfile_path: Path):
+def test_find_parameter():
     cmdfile = Commandfile(
         header={},
         parameters=[Parameter(key=f"param-{i}", value=i) for i in range(10)],
@@ -17,7 +15,7 @@ def test_find_parameter(commandfile_path: Path):
     assert param.value == 7
 
 
-def test_find_parameter_not_found(commandfile_path: Path):
+def test_find_parameter_not_found():
     cmdfile = Commandfile(
         header={},
         parameters=[Parameter(key=f"param-{i}", value=i) for i in range(10)],
