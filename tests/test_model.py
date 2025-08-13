@@ -22,9 +22,8 @@ def test_find_parameter_not_found():
         inputs=[],
         outputs=[],
     )
-    with pytest.raises(KeyError) as exc_info:
+    with pytest.raises(KeyError, match="Parameter 'param-20' not found"):
         cmdfile.find_parameter("param-20")
-        assert str(exc_info.value) == "Parameter 'param-20' not found"
 
 
 def test_find_input():
